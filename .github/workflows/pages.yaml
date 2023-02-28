@@ -17,9 +17,9 @@ jobs:
         with:
           node-version: 18.x
       - name: Install Docsify
-        run: yarn global add docsify
+        run: yarn global add docsify-cli
       - name: Build Production
-        run: yarn docsify
+        run: docsify init ./docs
       - name: Deploy Pages
         uses: JamesIves/github-pages-deploy-action@v4.4.1
         with:
