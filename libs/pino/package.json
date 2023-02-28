@@ -27,7 +27,7 @@
   },
   "dependencies": {
     "pino": "8.8.0",
-    "pino-pretty": "9.1.1"
+    "pino-pretty": "9.4.0"
   },
   "devDependencies": {
     "@types/jest": "29.4.0",
