@@ -1,0 +1,70 @@
+name: CD
+
+on:
+  push:
+    branches:
+      - master
+      - develop
+      - hotfix/**
+      - feature/**
+      - renovate/**
+
+jobs:
+  publish:
+    strategy:
+      fail-fast: false
+      matrix:
+        package:
+          - name: API - football
+            working-directory: ./apis/football
+          - name: API - forex
+            working-directory: ./apis/forex
+          - name: API - news
+            working-directory: ./apis/news
+          - name: API - telegram
+            working-directory: ./apis/telegram
+          - name: API - weather
+            working-directory: ./apis/weather
+          - name: Database - elasticsearch
+            working-directory: ./database/elasticsearch
+          - name: Database - mongodb
+            working-directory: ./database/mongodb
+          - name: Database - redis
+            working-directory: ./database/redis
+          - name: Database - vault
+            working-directory: ./database/vault
+          - name: Library - axios
+            working-directory: ./libs/axios
+          - name: Library - dotenv
+            working-directory: ./libs/dotenv
+          - name: Library - download
+            working-directory: ./libs/download
+          - name: Library - jwt
+            working-directory: ./libs/jwt
+          - name: Library - pino
+            working-directory: ./libs/pino
+          - name: Library - utils
+            working-directory: ./libs/utils
+          - name: Server - apollo
+            working-directory: ./server/apollo
+          - name: Server - fast
+            working-directory: ./server/fast
+    name: Ubuntu - Node.js 18.x - ${{ matrix.package.name }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 18.x
+          registry-url: https://npm.pkg.github.com/
+      - name: Install Dependencies
+        run: yarn install --no-cache --network-timeout 86400000
+        working-directory: ${{ matrix.package.working-directory }}
+      - name: Unit Test
+        run: yarn test
+        working-directory: ${{ matrix.package.working-directory }}
+      - name: Build Package
+        run: yarn build
+        working-directory: ${{ matrix.package.working-directory }}
